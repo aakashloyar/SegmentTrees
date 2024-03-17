@@ -4,7 +4,7 @@ public class main {
     public static void main(String[] args) {
         int n=6;
         int[] arr=new int[]{2,1,0,5,4,3};
-        Segment seg1=new Segment(n,arr);
+        Segment seg1=new Segment(n);
         seg1.build(arr,0,0,n-1);
         int min=seg1.query(0,0,n-1,0,n-1);
         System.out.println(min);
@@ -18,7 +18,7 @@ public class main {
 class Segment {
     int[] seg;
     int n;
-    Segment(int n,int[] seg) {
+    Segment(int n) {
         this.n=n;
         this.seg=new int[4*n];
     }
