@@ -6,12 +6,12 @@ public class main {
         int[] arr=new int[]{2,1,0,5,4,3};
         Segment seg1=new Segment(n,arr);
         seg1.build(arr,0,0,n-1);
-        int min=seg1.min(0,0,n-1,3,n-1);
+        int min=seg1.query(0,0,n-1,0,n-1);
         System.out.println(min);
         seg1.update(0,0,n-1,2,4);
         seg1.update(0,0,n-1,0,4);
         seg1.update(0,0,n-1,1,4);
-        min=seg1.min(0,0,n-1,0,n-1);
+        min=seg1.query(0,0,n-1,0,n-1);
         System.out.println(min);
     }
 }
@@ -35,9 +35,9 @@ class Segment {
         int rightind=(2*ind)+2;
         build(arr,leftind,low,mid);
         build(arr,rightind,mid+1,high);
-        seg[ind]=Math.min(seg[leftind],seg[rightind]);
+        seg[ind]=push(seg[leftind],seg[rightind]);
     }
-    int min(int ind,int low,int high,int s,int e) {
+    int query(int ind,int low,int high,int s,int e) {
         //no overlapping
         if(high<s ||e<low) return Integer.MAX_VALUE;
         //complete merge
@@ -45,11 +45,14 @@ class Segment {
         int mid=low+(high-low)/2;
         int leftind=2*ind+1;
         int rightind=2*ind+2;
-        int a=min(leftind,low,mid,s,e);
-        int b=min(rightind,mid+1,high,s,e);
+        int a=query(leftind,low,mid,s,e);
+        int b=query(rightind,mid+1,high,s,e);
+        return push(a,b);
+    }//return minimum of given range in array
+    int push(int a,int b) {
         int ans=Math.min(a,b);
         return ans;
-    }//return minimum of given range in array
+    }
     void update(int ind,int low,int high,int pivot,int val) {
         if(low==high) {
             seg[ind]=val;
