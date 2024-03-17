@@ -6,12 +6,12 @@ public class main {
         int[] arr=new int[]{2,1,0,5,4,3};
         Segment seg1=new Segment(n,arr);
         seg1.build(arr,0,0,n-1);
-        int min=seg1.min(0,n-1,0,0,n-1);
+        int min=seg1.min(0,0,n-1,3,n-1);
         System.out.println(min);
         seg1.update(0,0,n-1,2,4);
         seg1.update(0,0,n-1,0,4);
         seg1.update(0,0,n-1,1,4);
-        min=seg1.min(0,n-1,0,0,n-1);
+        min=seg1.min(0,0,n-1,0,n-1);
         System.out.println(min);
     }
 }
@@ -22,21 +22,22 @@ class Segment {
         this.n=n;
         this.seg=new int[4*n];
     }
-    int build(int[] arr,int ind,int low,int high) {
+    void build(int[] arr,int ind,int low,int high) {
         //left ind=2*ind+1
         //right ind=2*ind+2
         //mid=(low+high)/2
         if(high-low==0) {
             seg[ind]=arr[low];
-            return seg[ind];
+            return;
         }
         int mid=low+(high-low)/2;
         int leftind=(2*ind)+1;
         int rightind=(2*ind)+2;
-        seg[ind]=Math.min(build(arr,leftind,low,mid),build(arr,rightind,mid+1,high));
-        return seg[ind];
+        build(arr,leftind,low,mid);
+        build(arr,rightind,mid+1,high);
+        seg[ind]=Math.min(seg[leftind],seg[rightind]);
     }
-    int min(int s,int e,int ind,int low,int high) {
+    int min(int ind,int low,int high,int s,int e) {
         //no overlapping
         if(high<s ||e<low) return Integer.MAX_VALUE;
         //complete merge
@@ -44,7 +45,10 @@ class Segment {
         int mid=low+(high-low)/2;
         int leftind=2*ind+1;
         int rightind=2*ind+2;
-        return Math.min(min(s,e,leftind,low,mid),min(s,e,rightind,mid+1,high));
+        int a=min(leftind,low,mid,s,e);
+        int b=min(rightind,mid+1,high,s,e);
+        int ans=Math.min(a,b);
+        return ans;
     }//return minimum of given range in array
     void update(int ind,int low,int high,int pivot,int val) {
         if(low==high) {
