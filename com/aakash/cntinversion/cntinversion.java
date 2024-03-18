@@ -1,21 +1,44 @@
-package com.aakash;
+package com.aakash.cntinversion;
 
-public class main {
+
+import java.util.*;
+
+public class cntinversion {
     public static void main(String[] args) {
         int n=6;
-        int[] arr=new int[]{2,1,0,5,4,3};
+        int[] arr=new int[]{4,3,6,1,5,2};
         Segment seg1=new Segment(n);
-        seg1.build(arr,0,0,n-1);
-        int min=seg1.query(0,0,n-1,0,n-1);
-        System.out.println(min);
-        seg1.update(0,0,n-1,2,4);
-        seg1.update(0,0,n-1,0,4);
-        seg1.update(0,0,n-1,1,4);
-        min=seg1.query(0,0,n-1,0,n-1);
-        System.out.println(min);
+        int[][] temp=new int[n][2];
+        for(int i=0;i<n;i++) {
+            temp[i][1]=arr[i];
+            temp[i][0]=i;
+        }
+        sort2darray(temp);
+        int[] ind=new int[n];
+        for(int i=0;i<n;i++) {
+            ind[temp[i][0]]=i;
+        }
+        int[] cnt=new int[n];
+        Arrays.fill(cnt,1);
+        seg1.build(cnt,0,0,n-1);
+        int ans=0;
+        for(int i=0;i<arr.length;i++) {
+            seg1.update(0,0,n-1,ind[i],0);
+            ans+=seg1.query(0,0,n-1,0,ind[i]);
+        }
+        System.out.println(ans);
+    }
+    static void sort2darray(int[][] arr) {
+        Arrays.sort(arr,(int[] a, int[] b)->{
+            if(a[1]!=b[1])
+                return a[1]-b[1];
+            else return a[0]-b[0];
+
+        });
     }
 }
 class Segment {
+    //here we are counting how many of the number less than given number that are not visited
     int[] seg;
     int n;
     Segment(int n) {
@@ -39,7 +62,7 @@ class Segment {
     }
     int query(int ind,int low,int high,int s,int e) {
         //no overlapping
-        if(high<s ||e<low) return Integer.MAX_VALUE;
+        if(high<s ||e<low) return 0;
         //complete merge
         if(s<=low &&high<=e) return seg[ind];
         int mid=low+(high-low)/2;
@@ -50,7 +73,7 @@ class Segment {
         return push(a,b);
     }//return minimum of given range in array
     int push(int a,int b) {
-        int ans=Math.min(a,b);
+        int ans=a+b;
         return ans;
     }
     void update(int ind,int low,int high,int pivot,int val) {
@@ -65,4 +88,5 @@ class Segment {
         else update(rightind,mid+1,high,pivot,val);
         seg[ind]=push(seg[rightind],seg[leftind]);
     }//update the array on given index
+
 }
