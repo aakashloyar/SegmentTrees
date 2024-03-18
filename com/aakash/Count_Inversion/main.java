@@ -1,13 +1,12 @@
-package com.aakash.cntinversion;
-
+package com.aakash.Count_Inversion;
 
 import java.util.*;
 
-public class cntinversion {
+public class main {
     public static void main(String[] args) {
         int n=6;
         int[] arr=new int[]{4,3,6,1,5,2};
-        Segment seg1=new Segment(n);
+        CI seg1=new CI(n);
         int[][] temp=new int[n][2];
         for(int i=0;i<n;i++) {
             temp[i][1]=arr[i];
@@ -37,11 +36,11 @@ public class cntinversion {
         });
     }
 }
-class Segment {
+class CI {
     //here we are counting how many of the number less than given number that are not visited
     int[] seg;
     int n;
-    Segment(int n) {
+    CI(int n) {
         this.n=n;
         this.seg=new int[4*n];
     }
